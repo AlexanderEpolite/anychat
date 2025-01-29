@@ -3,7 +3,9 @@ import { Channel, Message } from "./models";
 import staticPlugin from "@elysiajs/static";
 
 new Elysia()
-    .use(staticPlugin())
+    .use(staticPlugin({
+        prefix: "/",
+    }))
     .post("/messages", async (ctx) => {
         const { message, channel } = ctx.body;
         
