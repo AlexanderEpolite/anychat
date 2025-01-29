@@ -160,6 +160,10 @@
             background-color: var(--input-background-color);
             color: var(--input-text-color);
         }
+        
+        #message-input input:disabled {
+            cursor: not-allowed;
+        }
 
         #message-input button {
             padding: 10px 20px;
@@ -393,9 +397,13 @@
                     addMessage(data.message);
                 }
             };
+            
             websocket.onclose = () => {
                 console.log("WebSocket connection closed");
+                
+                clearInterval(interval);
             };
+            
             websocket.onerror = error => {
                 console.error("WebSocket error:", error);
             };
@@ -412,7 +420,7 @@
         usernameInputEl.addEventListener("change", () => {
             username = usernameInputEl.value.trim();
             
-            if(username !== "" && currentChannel !== "") {
+            if(currentChannel !== "") {
                 messageInputEl.disabled = false;
                 sendMessageBtn.disabled = false;
             } else {
