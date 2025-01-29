@@ -373,7 +373,7 @@
                 
                 loadChannels();
             } catch(error) {
-                console.error("Error adding channel:", error);
+                console.error("Error adding channel: channels must be alphanumeric, with underscores and hyphens.");
             }
         }
         
@@ -392,6 +392,11 @@
             
             websocket.onmessage = event => {
                 const data = JSON.parse(event.data);
+                
+                if(data.newChannelName) { //force channel refresh
+                    loadChannels();
+                    return;
+                }
                 
                 if(data.channel === currentChannel) {
                     addMessage({

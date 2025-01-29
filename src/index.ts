@@ -22,9 +22,19 @@ const app = new Elysia()
                 };
             }
             
+            if(!channel.match(/^[a-zA-Z0-9_-]+$/)) {
+                ctx.set.status = 400;
+                
+                return {
+                    error: "Invalid channel name",
+                };
+            }
+            
             c = await Channel.create({
                 name: channel,
             });
+            
+            app.server?.publish("channels", JSON.stringify({name: c.name}));
         }
         
         const m = await Message.create({
@@ -75,9 +85,19 @@ const app = new Elysia()
             };
         }
         
+        if(!channel.match(/^[a-zA-Z0-9_-]+$/)) {
+            ctx.set.status = 400;
+            
+            return {
+                error: "Invalid channel name",
+            };
+        }
+        
         const newChannel = await Channel.create({
             name: channel,
         });
+        
+        app.server?.publish("channels", JSON.stringify({newChannelName: newChannel.name}));
         
         return newChannel;
     }, {
@@ -132,6 +152,10 @@ const app = new Elysia()
         
         message(ws, message) {
             message.channel && ws.subscribe(message.channel);
+        },
+        
+        open(ws) {
+            ws.subscribe("channels");
         },
     })
     .listen(3579);
