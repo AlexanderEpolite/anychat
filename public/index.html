@@ -374,7 +374,7 @@
         }
         
         function connectWebSocket() {
-            websocket = new WebSocket(`ws://${location.host}/messages`);
+            websocket = new WebSocket(`wss://${location.host}/messages`);
             websocket.onopen = () => {
                 websocket.send(JSON.stringify({channel: currentChannel}));
             };
