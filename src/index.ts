@@ -38,7 +38,7 @@ const app = new Elysia()
             oldest && await Message.deleteOne({_id: oldest._id});
         }
         
-        app.server?.publish("messages", JSON.stringify({
+        app.server?.publish(c.name, JSON.stringify({
             channel: c.name,
             message: m.text,
         }));
