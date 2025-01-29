@@ -375,8 +375,15 @@
         
         function connectWebSocket() {
             websocket = new WebSocket(`wss://${location.host}/messages`);
+            
+            let interval;
+            
             websocket.onopen = () => {
                 websocket.send(JSON.stringify({channel: currentChannel}));
+                
+                interval = setInterval(() => {
+                    websocket.send(JSON.stringify({keepAlive: true}));
+                }, 3000); //keep alive to avoid timeout
             };
             
             websocket.onmessage = event => {
@@ -405,7 +412,6 @@
         usernameInputEl.addEventListener("change", () => {
             username = usernameInputEl.value.trim();
             
-            // Check if both username and currentChannel are set
             if(username !== "" && currentChannel !== "") {
                 messageInputEl.disabled = false;
                 sendMessageBtn.disabled = false;
@@ -436,7 +442,7 @@
             sendMessageBtn.disabled = true;
         }
         
-        window.addEventListener("DOMContentLoaded", init);
+        init();
     </script>
     <script src="/purify.min.js"></script>
 </body>

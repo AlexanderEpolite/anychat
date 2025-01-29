@@ -69,6 +69,18 @@ new Elysia()
     .get("/messages", async (ctx) => {
         const { channel } = ctx.query;
         
+        const c = await Channel.findOne({
+            name: channel,
+        });
+        
+        if(!c) {
+            ctx.set.status = 404;
+            
+            return {
+                error: "Channel not found",
+            };
+        }
+        
         const messages = await Message.find({
             channel,
         });
@@ -84,13 +96,14 @@ new Elysia()
     })
     .ws("/messages", {
         body: t.Object({
-            channel: t.String({
+            channel: t.Optional(t.String({
                 minLength: 1,
                 maxLength: 16,
-            }),
+            })),
+            keepAlive: t.Optional(t.Boolean()),
         }),
         message(ws, message) {
-            ws.subscribe(message.channel);
+            message.channel && ws.subscribe(message.channel);
         },
     })
     .listen(3579);

@@ -9,6 +9,7 @@ await connect(`mongodb://${username}:${password}@127.0.0.1:27017/any-chat`);
 
 const message = new Schema<IMessage>({
     text: {type: String, required: true, trim: true, maxlength: 500},
+    channel: {type: String, required: true, trim: true, maxlength: 16},
     createdAt: {type: Date, default: Date.now, expires: 60 * 60 * 24 * 1000}, //1 day ttl
 });
 
