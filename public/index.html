@@ -394,7 +394,9 @@
                 const data = JSON.parse(event.data);
                 
                 if(data.channel === currentChannel) {
-                    addMessage(data.message);
+                    addMessage({
+                        text: data.message,
+                    });
                 }
             };
             
